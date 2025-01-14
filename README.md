@@ -1,4 +1,4 @@
-# Camera Object Detection
+# ObjectDetector
 
 This project demonstrates how to perform real-time object detection using a camera feed in the browser. It utilizes TensorFlow.js and the pre-trained COCO-SSD model for object detection directly from the camera.
 
