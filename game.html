@@ -32,6 +32,7 @@
     const canvas = document.getElementById('output');
     const ctx = canvas.getContext('2d');
     const jsConfetti = new JSConfetti()
+    let randomObject;
 
     function celebrate() {
       jsConfetti.addConfetti()
@@ -41,8 +42,6 @@
       return gameObjects[Math.floor(Math.random() * gameObjects.length)];
     }
     
-    let randomObject = getRandomObject();
-
     const getUniqueRandomObject = (lastObject) => {
       if (!lastObject) {
         return getRandomObject();
@@ -117,8 +116,7 @@
 
           if (randomObject === prediction.class) {
             celebrate();
-            randomObject = getUniqueRandomObject(randomObject);
-            objectElement.innerText = randomObject;
+            updateRandomObject();
           }
         });
 
