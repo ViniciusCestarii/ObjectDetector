@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera Object Detection</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+  <style>
+    video, canvas {
+      display: block;
+      margin: 10px auto;
+      width: 80%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 style="text-align: center;">Object Detection from Camera</h1>
+  <video id="camera" autoplay playsinline></video>
+  <canvas id="output"></canvas>
+
+  <script>
+    const video = document.getElementById('camera');
+    const canvas = document.getElementById('output');
+    const ctx = canvas.getContext('2d');
+
+    // Set up the camera
+    async function setupCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" }, // Use the back camera
+          audio: false
+        });
+        video.srcObject = stream;
+
+        return new Promise(resolve => {
+          video.onloadedmetadata = () => {
+            resolve(video);
+          };
+        });
+      } catch (err) {
+        console.error("Error accessing the camera: ", err);
+      }
+    }
+
+    // Load the model and perform detection
+    async function detectFromCamera() {
+      const model = await cocoSsd.load();
+      console.log("Model loaded!");
+
+      // Ensure the canvas matches the video dimensions
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      async function detect() {
+        // Draw the current video frame to the canvas
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Perform object detection on the canvas image
+        const predictions = await model.detect(canvas);
+        console.log(predictions);
+
+        // Draw the predictions on the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        predictions.forEach(prediction => {
+          const [x, y, width, height] = prediction.bbox;
+          ctx.strokeStyle = "red";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(x, y, width, height);
+          ctx.font = "16px Arial";
+          ctx.fillStyle = "red";
+          ctx.fillText(
+            `${prediction.class} (${Math.round(prediction.score * 100)}%)`,
+            x,
+            y > 10 ? y - 5 : 10
+          );
+        });
+
+        // Request the next frame for detection
+        requestAnimationFrame(detect);
+      }
+
+      detect();
+    }
+
+    // Initialize everything
+    (async function main() {
+      await setupCamera();
+      await detectFromCamera();
+    })();
+  </script>
+</body>
+
+</html>
