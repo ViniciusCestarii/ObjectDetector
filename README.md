@@ -10,6 +10,8 @@ This project demonstrates how to perform real-time object detection using a came
 
 - Uses TensorFlow.js and COCO-SSD pre-trained model.
 
+- Simple game to catch the detected object.
+
 ## Requirements
 
 - A modern browser that supports JavaScript and WebRTC (for camera access).
