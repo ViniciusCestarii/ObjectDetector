@@ -1,0 +1,15 @@
+const gameObjects = [
+  "person",
+  "bottle",
+  "apple",
+  "banana",
+  "keyboard",
+  "mouse",
+  "book",
+  "cell phone",
+  "scissors",
+  "teddy bear",
+  "hair drier",
+  "toothbrush",
+  "chair",
+];
