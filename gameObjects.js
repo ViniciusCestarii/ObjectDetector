@@ -4,7 +4,7 @@ const gameObjects = [
   "apple",
   "banana",
   "mouse",
-  "book",
+  "bed",
   "cell phone",
   "scissors",
   "teddy bear",
